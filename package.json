@@ -1,0 +1,23 @@
+{
+  "name": "someexpwebcamapp",
+  "version": "1.0.0",
+  "description": "Some experiment app form pluralslight lesson",
+  "main": "applicationsrc/webcamCapture/app/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deretor/Electron_experiments_someExpWebcamAPP.git"
+  },
+  "author": "Deretor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deretor/Electron_experiments_someExpWebcamAPP/issues"
+  },
+  "homepage": "https://github.com/Deretor/Electron_experiments_someExpWebcamAPP#readme",
+  "devDependencies": {
+    "electron": "^1.7.9"
+  },
+  "dependencies": {}
+}
