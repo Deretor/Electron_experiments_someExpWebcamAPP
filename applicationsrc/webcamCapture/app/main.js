@@ -1,35 +1,39 @@
 const electron = require('electron');
-const {app, BrowserWindow, Menu} = electron;
 
+const images = require('./scripts/images');
+const menuTemplate = require('./scripts/menu');
 
-let mainWindow;
+const {app, BrowserWindow, ipcMain: ipc, Menu} = electron;
 
-function defineMainWindow() {
-    mainWindow = new BrowserWindow({
-        width: 600,
-        height: 600,
-        show: false
-    });
-    // let menu = Menu.buildFromTemplate([{}]);
-    Menu.setApplicationMenu(null);
-
-    mainWindow.on('close', () => {
-        console.log('mainWindow close');
-        mainWindow = null
-    });
-
-}
-
-const activate = () => {
-    console.log('start');
-    defineMainWindow();
-    mainWindow.loadURL(`file://${__dirname}/views/capture.html`);
-    mainWindow.show();
-    // mainWindow.openDevTools();
-
-
-};
+let mainWindow = null
 
 app.on('ready', _ => {
-    activate();
-});
+    mainWindow = new BrowserWindow({
+        width: 893,
+        height: 725,
+        resizable: false
+    })
+
+    mainWindow.loadURL(`file://${__dirname}/views/capture.html`);
+
+    images.mkdir(images.getPicturesDir(app));
+
+    mainWindow.on('closed', _ => {
+        mainWindow = null
+    })
+
+    const menuContents = Menu.buildFromTemplate(menuTemplate(mainWindow))
+    Menu.setApplicationMenu(menuContents)
+})
+
+ipc.on('image-captured', (evt, contents) => {
+    images.save(images.getPicturesDir(app), contents, (err, imgPath) => {
+        images.cache(imgPath)
+    })
+})
+
+ipc.on('image-remove', (evt, index) => {
+    images.rm(index, _ => {
+        evt.sender.send('image-removed', index)
+    })
+})
